@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulaire</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
+
+</head>
+<body><br>
+<div class="container">
+
+    <div class="card m-5 p-2">
+<div class="card-header"><h2>Ajouter Produit</h2></div>
+        <div class="card-body">
+            <form method="post" th:action="@{/admin/save}" th:object="${produit}" enctype="multipart/form-data">
+    <div class="form-group">
+    <label for="nom">Nom :</label>
+    <input type="text" id="nom" class="form-control" th:field="*{nom}" th:value="${produit.nom}"/><br/>
+        <span class="text-danger" th:errors="${produit.nom}"></span>
+    </div>
+    <div class="form-group">
+    <label for="prix">Prix :</label>
+    <input type="number" id="prix" class="form-control" th:field="*{prix}" th:value="${produit.prix}"/><br/>
+        <span class="text-danger" th:errors="${produit.prix}"></span>
+
+    </div>
+    <div class="form-group">
+    <label for="quantite">Quantite :</label>
+    <input type="number" id="quantite" class="form-control" th:field="*{quantite}" th:value="${produit.quantite}"/><br/>
+        <span class="text-danger" th:errors="${produit.quantite}"></span>
+    </div>
+    <div class="form-group">
+        <label>List Categorie:</label>
+        <select name="categorie">
+            <option th:each="c:${categories}" th:value="${c.id}" th:text="${c.nom}"
+                th:selected="${produit.categorie!=null && produit.categorie.id==c.id}">
+            </option>
+        </select><br/>
+    </div>
+    <div class="form-group">
+        <label >Choisir Image :</label>
+        <input type="file"  name="file" accept="image/*" />
+        <input type="hidden" name="photo" th:value="${produit.photo}"/>
+    </div>
+    <br>
+    <input type="hidden" name="id" th:value="${produit.id}">
+
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+
+</form>
+    </div>
+</div>
+</div>
+
+</body>
+</html>

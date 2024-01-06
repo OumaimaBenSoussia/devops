@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+<div th:class="text-end">
+    <span th:text="${#authentication.name}"></span>
+    <form method="post" th:action="@{/logout}">
+            <button type="submit" class="btn btn-danger m-2">logout</button>
+    </form>
+</div>
+
+<div class="container">
+
+    <form action="/user/index">
+        <label for="mc">Mot clé: </label>
+        <input type="text" id="mc" name="mc" th:value="${mc}" />
+        <button type="submit" class="btn btn-primary mb-2 fa fa-search"></button>
+    </form>
+    <div class="container">
+
+    <div class="card">
+    <div class="card-header">
+        <h2> liste des produits</h2>
+    </div>
+    <div class="card-body">
+    <table class="table">
+        <thead>
+        <tr>
+            <th th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'')')}" >#</th>
+            <th>Photo</th>
+            <th>Nom</th>
+            <th>Prix</th>
+            <th>Quantite</th>
+            <th>Categorie</th>
+            <th th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'')')}">Action</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p:${products}">
+            <td th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'')')}" th:text="${p.id}"></td>
+            <td th:if="${p.photo==''|| p.photo==null}">
+            <img src="/photos/inconnu.png" width="50" heigth="50">
+            </td>
+            <td th:unless="${p.photo==''|| p.photo==null}">
+                <img th:src="@{${'/photos/'+p.photo}}" width="50" heigth="50">
+            </td>
+            <td th:text="${p.nom}"></td>
+            <td th:text="${p.prix}"></td>
+            <td th:text="${p.quantite}"></td>
+            <td th:text="${p.categorie.nom}"></td>
+
+            <td th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'')')}">
+                <a th:href="@{'/admin/delete/'+${p.id}}" class="btn btn-danger fa fa-trash"></a>
+                <a th:href="@{'/admin/update/'+${p.id}}" class="btn btn-warning fa fa-edit"></a>
+            </td>
+        </tr>
+
+        </tbody>
+        </table>
+        <ul class="nav nav-pills">
+            <li th:each="i,c:${pages}">
+                <a th:href="@{/user/index(page=${c.count},mc=${mc})}"
+                   th:text="${c.count}"th:class="${current==c.count-1}?'btn btn-primary mx-2':'btn btn-outline-primary mx-2'"></a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+
+</div>
+</div>
+
+
+
+</body>
+</html>
